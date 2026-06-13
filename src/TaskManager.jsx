@@ -198,6 +198,9 @@ function themeVars(dark) {
         '--border2': 'rgba(255,255,255,0.16)',
         '--shadow': '0 14px 40px rgba(0,0,0,0.45)',
         '--chip': 'rgba(255,255,255,0.07)',
+        // Opaque surface for floating popovers (calendar, menus, modal) so
+        // the page doesn't show through the translucent --panel.
+        '--pop': '#1a1a26',
       }
     : {
         '--bg': '#f4f4fb',
@@ -210,6 +213,7 @@ function themeVars(dark) {
         '--border2': 'rgba(0,0,0,0.16)',
         '--shadow': '0 14px 40px rgba(30,30,60,0.10)',
         '--chip': 'rgba(99,102,241,0.08)',
+        '--pop': '#ffffff',
       }
 }
 
@@ -1967,10 +1971,14 @@ function StyleBlock() {
 
 .ptm-details {
   max-height: 0; overflow: hidden; opacity: 0;
-  transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+  /* overflow flips back to hidden immediately on collapse so the animation clips */
+  transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease, overflow 0s;
 }
 .ptm-addbox:hover .ptm-details, .ptm-addbox:focus-within .ptm-details {
   max-height: 520px; opacity: 1; margin-top: 14px;
+  /* once fully expanded, let the calendar / tag popups overflow the box */
+  overflow: visible;
+  transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease, overflow 0s 0.3s;
 }
 .ptm-details-inner {
   display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;
@@ -2056,7 +2064,7 @@ function StyleBlock() {
 .ptm-taginput-field { flex: 1; min-width: 80px; border: none; background: transparent; outline: none; color: var(--text); font-size: 13px; }
 .ptm-tagmenu {
   position: absolute; z-index: 30; top: calc(100% + 4px); left: 0; right: 0;
-  background: var(--panel); border: 1px solid var(--border2); border-radius: 11px;
+  background: var(--pop); border: 1px solid var(--border2); border-radius: 11px;
   box-shadow: var(--shadow); padding: 5px; display: grid; gap: 2px; max-height: 220px; overflow: auto;
 }
 .ptm-tagopt {
@@ -2069,7 +2077,7 @@ function StyleBlock() {
 .ptm-swatches {
   position: absolute; z-index: 40; top: calc(100% + 6px); left: 0;
   display: grid; grid-template-columns: repeat(5, 18px); gap: 6px; padding: 8px;
-  background: var(--panel); border: 1px solid var(--border2); border-radius: 10px; box-shadow: var(--shadow);
+  background: var(--pop); border: 1px solid var(--border2); border-radius: 10px; box-shadow: var(--shadow);
 }
 .ptm-swatch { width: 18px; height: 18px; border-radius: 999px; border: 2px solid transparent; cursor: pointer; padding: 0; }
 .ptm-swatch[data-active="true"] { border-color: var(--text); }
@@ -2095,7 +2103,7 @@ function StyleBlock() {
 .ptm-clear:hover { color: var(--text); }
 .ptm-cal {
   position: absolute; z-index: 40; top: calc(100% + 6px); left: 0; width: 240px;
-  background: var(--panel); border: 1px solid var(--border2); border-radius: 14px;
+  background: var(--pop); border: 1px solid var(--border2); border-radius: 14px;
   box-shadow: var(--shadow); padding: 12px;
 }
 .ptm-cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
@@ -2144,7 +2152,7 @@ function StyleBlock() {
   backdrop-filter: blur(3px);
 }
 .ptm-modal {
-  position: relative; width: 100%; max-width: 540px; background: var(--panel);
+  position: relative; width: 100%; max-width: 540px; background: var(--pop);
   border: 1px solid var(--border2); border-radius: 18px; box-shadow: var(--shadow);
   padding: 22px; color: var(--text); animation: ptm-pop 0.18s ease;
 }
