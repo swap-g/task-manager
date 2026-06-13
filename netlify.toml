@@ -1,0 +1,11 @@
+# Netlify build settings for this Vite SPA.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Single-page-app fallback: serve index.html for any path so client routing
+# and the Supabase password-recovery redirect resolve correctly.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
